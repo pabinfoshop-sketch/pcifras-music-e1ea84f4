@@ -60,31 +60,9 @@ export default function App() {
   const [authMode, setAuthMode] = useState('login')
   const API_URL = import.meta.env.VITE_API_URL || '/api'
 
-  useEffect(() => {
-    setTimeout(() => {
-      const splash = document.getElementById('splash')
-      if (splash) {
-        splash.style.transition = 'opacity 0.5s ease'
-        splash.style.opacity = '0'
-        setTimeout(() => splash.remove(), 600)
-      }
-    }, 2800)
-  }, [])
+  // Splash & health check desativados (Lovable Cloud)
+  useEffect(() => {}, [])
 
-  useEffect(() => {
-    let cancelled = false
-    const check = async () => {
-      try {
-        const res = await fetch(`${API_URL}/health`)
-        if (!cancelled) setConnected(res.ok)
-      } catch {
-        if (!cancelled) setConnected(false)
-      }
-    }
-    check()
-    const id = setInterval(check, 15000)
-    return () => { cancelled = true; clearInterval(id) }
-  }, [])
 
   const allCategories = [...new Set(songs.map(s => s.category).filter(Boolean))]
   const filtered = songs.filter(s => {
