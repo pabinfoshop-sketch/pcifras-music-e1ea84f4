@@ -688,7 +688,7 @@ export default function App() {
                   {showFavorites ? '★' : '☆'}
                 </button>
               </div>
-              <button className="sidebar-add-btn" onClick={() => setShowModal(true)}>＋ Adicionar Música</button>
+              <button className="sidebar-add-btn" onClick={() => setShowModal(true)}>+ Adicionar Música</button>
               <div className="sidebar-songs">
                 {filtered.length === 0 ? (
                   <div className="empty-list">Nenhuma música encontrada.<br />Tente outro nome ou limpe o filtro.</div>
@@ -880,7 +880,7 @@ export default function App() {
             <div className="topbar">
               <div className="topbar-title">📋 Repertórios</div>
               <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={openSupport} title={isPremium ? 'Premium Ativo' : 'Apoiar o Projeto'}>{isPremium ? '⭐' : '☕'}</button>
-              <button className="tbtn" onClick={createSetlist}>＋</button>
+              <button className="tbtn" onClick={createSetlist}>+</button>
             </div>
             <div id="content">
               <MobileSetlistList
@@ -938,7 +938,7 @@ export default function App() {
                 </div>
               </div>
               <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={openSupport} title={isPremium ? 'Premium Ativo' : 'Apoiar o Projeto'}>{isPremium ? '⭐' : '☕'}</button>
-              <button className="tbtn" onClick={() => setShowModal(true)} title="Adicionar música">＋</button>
+              <button className="tbtn" onClick={() => setShowModal(true)} title="Adicionar música">+</button>
             </div>
             <div id="content" style={{paddingTop:8}}>
               {welcome ? (
@@ -947,7 +947,7 @@ export default function App() {
                   <h2>Comece seu repertório</h2>
                   <p>Adicione cifras manualmente ou busque online e organize suas músicas em setlists.</p>
                   <div className="welcome-actions">
-                    <button className="welcome-btn welcome-btn-primary" onClick={() => setShowModal(true)}>＋ Adicionar Música</button>
+                    <button className="welcome-btn welcome-btn-primary" onClick={() => setShowModal(true)}>+ Adicionar Música</button>
                   </div>
                   <div className="welcome-hint">Suas músicas ficam salvas neste dispositivo.</div>
                 </div>
@@ -994,7 +994,7 @@ export default function App() {
               )}
             </div>
             <div className="keyboard-hint">
-              {songs.length > 0 ? 'Toque em uma música para abrir a cifra' : 'Comece adicionando sua primeira música no ＋'}
+              {songs.length > 0 ? 'Toque em uma música para abrir a cifra' : 'Comece adicionando sua primeira música no +'}
             </div>
           </>
         )}
@@ -1091,7 +1091,7 @@ export default function App() {
                   </div>
                 ))
               )}
-              <button className="form-submit" onClick={() => { createSetlist(); setAddToSetlistSong(null) }}>＋ Novo Repertório</button>
+              <button className="form-submit" onClick={() => { createSetlist(); setAddToSetlistSong(null) }}>+ Novo Repertório</button>
             </div>
           </div>
         </div>
@@ -1451,7 +1451,7 @@ export default function App() {
 function SetlistList({ setlists, onSelect, onCreate }) {
   return (
     <div className="sidebar-songs">
-      <button className="sidebar-add-btn" onClick={onCreate}>＋ Novo Repertório</button>
+      <button className="sidebar-add-btn" onClick={onCreate}>+ Novo Repertório</button>
       {setlists.length === 0 ? (
         <div className="empty-list">Nenhum repertório por aqui.<br />Crie um para organizar suas músicas.</div>
       ) : (
@@ -1472,7 +1472,7 @@ function SetlistList({ setlists, onSelect, onCreate }) {
 function MobileSetlistList({ setlists, onSelect, onCreate }) {
   return (
     <div>
-      <button className="msearch-btn" style={{width:'100%',marginBottom:12}} onClick={onCreate}>＋ Novo Repertório</button>
+      <button className="msearch-btn" style={{width:'100%',marginBottom:12}} onClick={onCreate}>+ Novo Repertório</button>
       {setlists.length === 0 ? (
         <div className="empty-list">Você ainda não tem repertórios.<br />Crie um para organizar suas músicas.</div>
       ) : (
