@@ -879,7 +879,7 @@ export default function App() {
           <>
             <div className="topbar">
               <div className="topbar-title">📋 Repertórios</div>
-              <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={() => setShowPremium(true)} title={isPremium ? 'Premium Ativo' : 'Apoiar o App'}>{isPremium ? '⭐' : '☕'}</button>
+              <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={openSupport} title={isPremium ? 'Premium Ativo' : 'Apoiar o Projeto'}>{isPremium ? '⭐' : '☕'}</button>
               <button className="tbtn" onClick={createSetlist}>＋</button>
             </div>
             <div id="content">
