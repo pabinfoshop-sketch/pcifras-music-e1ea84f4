@@ -108,78 +108,9 @@ export default function Modal({ onAdd, onClose }) {
           <button className="modal-close" onClick={reset}>✕</button>
         </div>
         <div className="modal-body">
-          <div className="tab-row">
-            <div className={`tab${tab === 'search' ? ' active' : ''}`} onClick={() => setTab('search')}>
-              🔍 Buscar Online
-            </div>
-            <div className={`tab${tab === 'manual' ? ' active' : ''}`} onClick={() => setTab('manual')}>
-              ✏️ Digitar Manual
-            </div>
-          </div>
+          {/* Busca online temporariamente desativada — apenas entrada manual disponível */}
 
-          {tab === 'search' && (
-            <div>
-              <div className="msearch-row">
-                <input
-                  ref={inputRef}
-                  className="msearch"
-                  placeholder="Nome da música ou artista..."
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                />
-                <button className="msearch-btn" onClick={handleSearch} disabled={status === 'searching'}>
-                  Buscar
-                </button>
-              </div>
 
-              {status === 'searching' && (
-                <div className="status-msg">
-                  <span className="status-spinner" />Buscando...
-                </div>
-              )}
-
-              {status === 'notfound' && (
-                <div className="status-msg">
-                  ⚠️ Nenhuma música encontrada.<br />
-                  <span style={{ fontSize: 0.82, opacity: 0.7 }}>Tente digitar manualmente.</span>
-                </div>
-              )}
-
-              {status === 'error' && (
-                <div className="status-msg">
-                  ❌ Erro ao buscar. Verifique a conexão.
-                </div>
-              )}
-
-              {results.length > 0 && (
-                <div className="results-list">
-                  {results.map((s, i) => (
-                    <div
-                      key={i}
-                      className={`result-card${fetching === s.url ? ' loading' : ''}`}
-                      onClick={() => !fetching && handleSelectResult(s)}
-                    >
-                      <div className="result-card-title">
-                        {s.title}
-                        <span className="result-card-key">{s.key}</span>
-                      </div>
-                      <div className="result-card-meta">
-                        {s.artist_name}
-                      </div>
-                      {fetching === s.url ? (
-                        <div className="result-card-loading">
-                          <span className="status-spinner" />Obtendo cifra...
-                        </div>
-                      ) : (
-                        <div className="result-card-cta">▶ Clique para adicionar</div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
 
           {tab === 'manual' && (
             <div>
