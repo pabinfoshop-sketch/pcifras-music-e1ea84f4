@@ -10,6 +10,30 @@ import AuthModal from './AuthModal'
 import ErrorBoundary from './ErrorBoundary'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { parseCifraText } from '../utils/parser'
+import { supabase } from '@/integrations/supabase/client'
+
+// Derives a normalized user object with premium/trial info from a Supabase profile row.
+function profileToUser(profile, sessionUser) {
+  if (!profile && !sessionUser) return null
+  const email = profile?.email || sessionUser?.email || ''
+  const name = profile?.name || sessionUser?.user_metadata?.name || (email ? email.split('@')[0] : 'Você')
+  const trialEnd = profile?.trial_ends_at || null
+  const premiumUntil = profile?.premium_until || null
+  const now = Date.now()
+  const trialActive = trialEnd ? new Date(trialEnd).getTime() > now : false
+  const paidActive = !!profile?.premium && (!premiumUntil || new Date(premiumUntil).getTime() > now)
+  const trialDays = trialActive ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - now) / 86400000)) : 0
+  return {
+    id: profile?.id || sessionUser?.id,
+    email,
+    name,
+    trialEnd,
+    trialDays,
+    premium: paidActive || trialActive,
+    premiumSince: paidActive ? (profile?.premium_until ? null : profile?.updated_at) : null,
+    paidActive,
+  }
+}
 
 const STORE_KEY = 'cifras_app_songs'
 const SETLISTS_KEY = 'cifras_setlists'
