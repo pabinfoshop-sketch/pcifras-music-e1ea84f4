@@ -930,17 +930,28 @@ export default function App() {
         ) : (
           <>
             <div className="topbar">
-              <div className="topbar-title">🎸 songpcmusic</div>
+              <div className="topbar-brand">
+                <span className="topbar-brand-mark">♪</span>
+                <div className="topbar-brand-text">
+                  <span className="topbar-brand-title">PCifras<span className="topbar-brand-accent">Music</span></span>
+                  <span className="topbar-brand-sub">Cifras & Repertórios</span>
+                </div>
+              </div>
               <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={openSupport} title={isPremium ? 'Premium Ativo' : 'Apoiar o Projeto'}>{isPremium ? '⭐' : '☕'}</button>
-              <button className="tbtn" onClick={() => setShowModal(true)}>＋</button>
+              <button className="tbtn" onClick={() => setShowModal(true)} title="Adicionar música">＋</button>
             </div>
             <div id="content" style={{paddingTop:8}}>
               {welcome ? (
                 <div className="welcome">
                   <div className="welcome-icon">♫</div>
-                  <h2>Suas Cifras</h2>
-                  <p>Busque cifras online ou adicione manualmente.</p>
+                  <h2>Comece seu repertório</h2>
+                  <p>Adicione cifras manualmente ou busque online e organize suas músicas em setlists.</p>
+                  <div className="welcome-actions">
+                    <button className="welcome-btn welcome-btn-primary" onClick={() => setShowModal(true)}>＋ Adicionar Música</button>
+                  </div>
+                  <div className="welcome-hint">Suas músicas ficam salvas neste dispositivo.</div>
                 </div>
+
               ) : (
                 <>
                   <div className="search-bar">
