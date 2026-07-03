@@ -1171,14 +1171,17 @@ export default function App() {
                 ☕ Apoiar com um café
               </a>
 
-              <button
-                type="button"
-                className="premium-skip"
-                onClick={() => { setShowSupport(false); if (authUser) setShowPremium(true); else { setShowAuth(true); setAuthMode('register') } }}
-                style={{marginTop:10,width:'100%'}}
-              >
-                ⭐ Assinar o Premium (em breve)
-              </button>
+              {!authUser && (
+                <button
+                  type="button"
+                  className="premium-skip"
+                  onClick={() => { setShowSupport(false); setShowAuth(true); setAuthMode('register') }}
+                  style={{marginTop:10,width:'100%'}}
+                >
+                  🎉 Criar conta grátis (7 dias Premium)
+                </button>
+              )}
+
 
               <div className="premium-footer-note" style={{marginTop:16,textAlign:'center'}}>
                 Obrigado por apoiar 💜 — <strong>PauloC®</strong>
