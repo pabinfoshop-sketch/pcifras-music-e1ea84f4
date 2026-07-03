@@ -14,6 +14,11 @@ import { parseCifraText } from '../utils/parser'
 const STORE_KEY = 'cifras_app_songs'
 const SETLISTS_KEY = 'cifras_setlists'
 
+// Configuração de apoio ao projeto — edite estes valores para os seus links reais
+const SUPPORT_PIX_KEY = 'apoio@pcifrasmusic.com'
+const SUPPORT_PIX_NAME = 'PauloC — PCifrasMusic'
+const SUPPORT_COFFEE_URL = 'https://www.buymeacoffee.com/pcifrasmusic'
+
 export default function App() {
   const [songs, setSongs] = useLocalStorage(STORE_KEY, [])
   const [setlists, setSetlists] = useLocalStorage(SETLISTS_KEY, [])
