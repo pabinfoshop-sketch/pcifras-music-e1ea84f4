@@ -571,11 +571,45 @@ button { cursor: pointer; border: none; background: none; color: inherit; }
 }
 
 .welcome p {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  max-width: 300px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 320px;
   color: var(--text-dim);
+  margin-bottom: 24px;
 }
+
+.welcome-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}
+.welcome-btn {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  font-size: 0.98rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.welcome-btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 8px 24px var(--accent-glow);
+}
+.welcome-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 30px var(--accent-glow); }
+.welcome-btn-primary:active { transform: translateY(0); }
+
+.welcome-hint {
+  margin-top: 18px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  opacity: 0.75;
+}
+
 
 /* ─── SONG VIEW ─── */
 .song-header {
