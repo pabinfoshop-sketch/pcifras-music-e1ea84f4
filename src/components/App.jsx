@@ -10,6 +10,30 @@ import AuthModal from './AuthModal'
 import ErrorBoundary from './ErrorBoundary'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { parseCifraText } from '../utils/parser'
+import { supabase } from '@/integrations/supabase/client'
+
+// Derives a normalized user object with premium/trial info from a Supabase profile row.
+function profileToUser(profile, sessionUser) {
+  if (!profile && !sessionUser) return null
+  const email = profile?.email || sessionUser?.email || ''
+  const name = profile?.name || sessionUser?.user_metadata?.name || (email ? email.split('@')[0] : 'Você')
+  const trialEnd = profile?.trial_ends_at || null
+  const premiumUntil = profile?.premium_until || null
+  const now = Date.now()
+  const trialActive = trialEnd ? new Date(trialEnd).getTime() > now : false
+  const paidActive = !!profile?.premium && (!premiumUntil || new Date(premiumUntil).getTime() > now)
+  const trialDays = trialActive ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - now) / 86400000)) : 0
+  return {
+    id: profile?.id || sessionUser?.id,
+    email,
+    name,
+    trialEnd,
+    trialDays,
+    premium: paidActive || trialActive,
+    premiumSince: paidActive ? (profile?.premium_until ? null : profile?.updated_at) : null,
+    paidActive,
+  }
+}
 
 const STORE_KEY = 'cifras_app_songs'
 const SETLISTS_KEY = 'cifras_setlists'
@@ -58,12 +82,12 @@ export default function App() {
   const voiceStreamRef = useRef(null)
   const [connected, setConnected] = useState(true)
   const [showPremium, setShowPremium] = useState(false)
-  const [isPremium, setIsPremium] = useLocalStorage('cifras_premium', false)
+  
   const [authUser, setAuthUser] = useLocalStorage('cifras_user', null)
-  const [authToken, setAuthToken] = useLocalStorage('cifras_token', null)
   const [showAuth, setShowAuth] = useState(false)
   const [authMode, setAuthMode] = useState('login')
   const [showSupport, setShowSupport] = useState(false)
+  const isPremium = !!authUser?.premium
   const openSupport = useCallback(() => {
     setShowSupport(true)
   }, [])
@@ -75,7 +99,6 @@ export default function App() {
       setToast('Copie manualmente: ' + SUPPORT_PIX_KEY)
     }
   }, [])
-  const API_URL = import.meta.env.VITE_API_URL || '/api'
 
   // Splash & health check desativados (Lovable Cloud)
   useEffect(() => {}, [])
@@ -117,144 +140,117 @@ export default function App() {
     setTimeout(() => setToast(''), 2200)
   }, [])
 
+  const refreshProfile = useCallback(async (sessionUser) => {
+    if (!sessionUser) { setAuthUser(null); return null }
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', sessionUser.id)
+      .maybeSingle()
+    if (error) {
+      // Non-fatal: fall back to session-only user
+      const u = profileToUser(null, sessionUser)
+      setAuthUser(u)
+      return u
+    }
+    const u = profileToUser(profile, sessionUser)
+    setAuthUser(u)
+    return u
+  }, [setAuthUser])
+
   const handleAuth = useCallback(async (mode, name, email, password) => {
+    const cleanEmail = (email || '').trim().toLowerCase()
+    if (!cleanEmail || !password) {
+      showToast('Preencha email e senha.')
+      return false
+    }
+    if (password.length < 6) {
+      showToast('A senha precisa ter pelo menos 6 caracteres.')
+      return false
+    }
     try {
-      const endpoint = mode === 'login' ? 'login' : 'register'
-      const body = mode === 'login' ? { email, password } : { name, email, password }
-      const res = await fetch(`${API_URL}/auth/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        showToast(data.error || 'Erro ao autenticar')
-        return false
+      if (mode === 'login') {
+        const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password })
+        if (error) {
+          const msg = /invalid/i.test(error.message)
+            ? 'Email ou senha incorretos.'
+            : (error.message || 'Não foi possível entrar.')
+          showToast(msg)
+          return false
+        }
+        const u = await refreshProfile(data.user)
+        setShowAuth(false)
+        showToast(`Bem-vindo${u?.name ? `, ${u.name}` : ''}!`)
+        return true
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password,
+          options: {
+            data: { name: (name || '').trim() || cleanEmail.split('@')[0] },
+            emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+          },
+        })
+        if (error) {
+          const msg = /registered|exists/i.test(error.message)
+            ? 'Este email já tem conta. Tente entrar.'
+            : (error.message || 'Não foi possível criar a conta.')
+          showToast(msg)
+          return false
+        }
+        if (!data.session) {
+          setShowAuth(false)
+          showToast('Conta criada! Verifique seu email para confirmar.')
+          return true
+        }
+        await refreshProfile(data.user)
+        setShowAuth(false)
+        showToast('Conta criada! 7 dias grátis ativados 🎉')
+        return true
       }
-      setAuthToken(data.token)
-      setAuthUser(data.user)
-      setIsPremium(!!data.user.premium)
-      setShowAuth(false)
-      const trialInfo = data.user.trialDays ? ` (${data.user.trialDays}d grátis)` : ''
-      showToast(mode === 'login' ? `Bem-vindo, ${data.user.name}!${trialInfo}` : `Conta criada! ${data.user.trialDays} dias grátis ativados 🎉`)
-      return true
     } catch (e) {
       showToast('Sem conexão. Tente novamente em instantes.')
       return false
     }
-  }, [API_URL, setAuthToken, setAuthUser, setIsPremium, showToast])
+  }, [refreshProfile, showToast, setAuthUser])
 
   const handleLogout = useCallback(async () => {
-    try {
-      await fetch(`${API_URL}/auth/logout`, { method: 'POST' })
-    } catch {}
-    setAuthToken(null)
+    try { await supabase.auth.signOut() } catch {}
     setAuthUser(null)
-    setIsPremium(false)
     showToast('Você saiu da conta')
-  }, [API_URL, setAuthToken, setAuthUser, setIsPremium, showToast])
+  }, [setAuthUser, showToast])
 
-  const handleSubscribe = useCallback(async () => {
-    if (!authToken) {
+  const handleSubscribe = useCallback(() => {
+    if (!authUser) {
       setShowAuth(true)
-      setAuthMode('login')
+      setAuthMode('register')
       return
     }
-    try {
-      const res = await fetch(`${API_URL}/pagamento/checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-      })
-      const data = await res.json()
-      if (data.url) {
-        window.location.href = data.url
-      } else if (data.sandbox_url) {
-        window.location.href = data.sandbox_url
-      } else {
-        showToast(data.error || 'Erro ao iniciar pagamento')
-      }
-    } catch (e) {
-      showToast('Sem conexão com o pagamento. Tente novamente.')
-    }
-  }, [API_URL, authToken, showToast])
+    showToast('💳 A cobrança está sendo finalizada. Em breve você poderá assinar por aqui.')
+  }, [authUser, showToast])
 
-  const [pixData, setPixData] = useState(null)
-  const [pixLoading, setPixLoading] = useState(false)
-  const handleGeneratePix = useCallback(async (amount) => {
-    if (!authToken) { setShowAuth(true); setAuthMode('login'); return }
-    setPixLoading(true)
-    try {
-      const res = await fetch(`${API_URL}/pagamento/pix`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ amount: amount || 24.90 }),
-      })
-      const data = await res.json()
-      if (res.ok && data.qr_code) {
-        setPixData(data)
-        showToast('QR Code PIX gerado!')
-      } else {
-        showToast(data.error || 'Erro ao gerar PIX')
-      }
-    } catch (e) {
-      showToast('Não foi possível gerar o PIX agora. Tente novamente.')
-    } finally {
-      setPixLoading(false)
-    }
-  }, [API_URL, authToken, showToast])
+  // PIX de assinatura desativado — apoio via PIX está no modal "Apoiar o Projeto".
 
-  const handleCancelSubscription = useCallback(async () => {
-    if (!authToken) return
-    if (!confirm('Tem certeza que deseja cancelar a assinatura? Você continuará com acesso até o fim do ciclo pago.')) return
-    try {
-      const res = await fetch(`${API_URL}/pagamento/cancel`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${authToken}` },
-      })
-      const data = await res.json()
-      if (res.ok) {
-        showToast(data.message || 'Assinatura cancelada')
-        const me = await fetch(`${API_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${authToken}` } })
-        const meData = await me.json()
-        if (meData?.user) { setAuthUser(meData.user); setIsPremium(!!meData.user.premium) }
-      } else {
-        showToast(data.error || 'Erro ao cancelar')
-      }
-    } catch (e) {
-      showToast('Sem conexão para cancelar. Tente novamente.')
-    }
-  }, [API_URL, authToken, setAuthUser, setIsPremium, showToast])
 
+  const handleCancelSubscription = useCallback(() => {
+    showToast('Gerenciamento de assinatura estará disponível quando a cobrança for ativada.')
+  }, [showToast])
+
+  // Session bootstrap + reactive updates from Supabase auth.
   useEffect(() => {
-    if (authToken) {
-      fetch(`${API_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${authToken}` } })
-        .then(r => r.ok ? r.json() : null)
-        .then(data => {
-          if (data?.user) {
-            setAuthUser(data.user)
-            setIsPremium(!!data.user.premium)
-          }
-        }).catch(() => {})
-    }
-  }, [authToken, API_URL, setAuthUser, setIsPremium])
+    let mounted = true
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return
+      if (data.session?.user) refreshProfile(data.session.user)
+      else setAuthUser(null)
+    })
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') { setAuthUser(null); return }
+      if (session?.user) refreshProfile(session.user)
+    })
+    return () => { mounted = false; sub.subscription.unsubscribe() }
+  }, [refreshProfile, setAuthUser])
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('pagamento') === 'sucesso') {
-      showToast('🎉 Pagamento realizado! Bem-vindo ao Premium!')
-      if (authToken) {
-        fetch(`${API_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${authToken}` } })
-          .then(r => r.json())
-          .then(data => {
-            if (data?.user) {
-              setAuthUser(data.user)
-              setIsPremium(!!data.user.premium)
-            }
-          }).catch(() => {})
-      }
-      window.history.replaceState({}, '', window.location.pathname)
-    }
-  }, [authToken, API_URL, setAuthUser, setIsPremium, showToast])
 
   const handleSelect = useCallback(song => {
     stopMetro()
@@ -585,32 +581,17 @@ export default function App() {
   }, [setSongs, setSetlists, showToast])
 
   const handleCloudSync = useCallback(async () => {
-    if (!authToken) { showToast('Entre na sua conta para continuar'); return }
+    if (!authUser) { showToast('Entre na sua conta para continuar'); return }
     if (!isPremium) { showToast('Recurso exclusivo do plano Premium'); return }
-    try {
-      const res = await fetch(`${API_URL}/sync/save`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` },
-        body: JSON.stringify({ songs, setlists }),
-      })
-      if (res.ok) showToast('Tudo salvo na nuvem com segurança')
-      else { const d = await res.json(); showToast(d.error || 'Erro ao sincronizar') }
-    } catch { showToast('Sem conexão. Tente novamente em instantes.') }
-  }, [API_URL, authToken, isPremium, songs, setlists, showToast])
+    showToast('Backup na nuvem em breve — seus dados seguem salvos neste dispositivo.')
+  }, [authUser, isPremium, showToast])
 
   const handleCloudRestore = useCallback(async () => {
-    if (!authToken) { showToast('Entre na sua conta para continuar'); return }
+    if (!authUser) { showToast('Entre na sua conta para continuar'); return }
     if (!isPremium) { showToast('Recurso exclusivo do plano Premium'); return }
-    try {
-      const res = await fetch(`${API_URL}/sync/load`, { headers: { Authorization: `Bearer ${authToken}` } })
-      if (res.ok) {
-        const data = await res.json()
-        if (data.songs?.length) setSongs(data.songs)
-        if (data.setlists?.length) setSetlists(data.setlists)
-        showToast(`${data.songs?.length || 0} músicas restauradas da nuvem`)
-      } else { const d = await res.json(); showToast(d.error || 'Erro ao restaurar') }
-    } catch { showToast('Sem conexão. Tente novamente em instantes.') }
-  }, [API_URL, authToken, isPremium, setSongs, setSetlists, showToast])
+    showToast('Restauração na nuvem em breve — assim que o backup for ativado.')
+  }, [authUser, isPremium, showToast])
+
 
   const handleShare = useCallback(() => {
     if (!currentSong) return
@@ -1292,28 +1273,15 @@ export default function App() {
                   <button className="premium-cta" onClick={handleSubscribe}>
                     💳 Assinar Premium — R$ 24,90/mês
                   </button>
-
-                  <div className="premium-pix">
-                    <div className="premium-pix-label">Ou faça um PIX avulso de qualquer valor</div>
-                    {pixData?.qr_code_base64 ? (
-                      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:8,marginTop:8}}>
-                        <img src={`data:image/png;base64,${pixData.qr_code_base64}`} alt="QR Code PIX" style={{width:200,height:200,background:'#fff',padding:8,borderRadius:8}} />
-                        <div className="premium-pix-key" onClick={() => { navigator.clipboard?.writeText(pixData.qr_code); showToast('Código PIX copiado!') }}>
-                          <code style={{fontSize:'0.7rem',wordBreak:'break-all'}}>{pixData.qr_code}</code>
-                          <span className="premium-pix-copy">📋</span>
-                        </div>
-                        <small className="premium-pix-hint">Toque no código para copiar · valor R$ {Number(pixData.amount).toFixed(2).replace('.', ',')}</small>
-                      </div>
-                    ) : (
-                      <button className="premium-skip" onClick={() => handleGeneratePix(24.90)} disabled={pixLoading} style={{marginTop:6}}>
-                        {pixLoading ? '⏳ Gerando...' : '🪙 Gerar QR Code PIX (R$ 24,90)'}
-                      </button>
-                    )}
+                  <div style={{fontSize:'0.78rem',color:'var(--text-dim)',textAlign:'center',marginTop:8,lineHeight:1.5}}>
+                    A cobrança está em ativação. Enquanto isso, você pode
+                    <button className="link-btn" onClick={() => { setShowPremium(false); openSupport() }} style={{marginLeft:4}}>apoiar o projeto</button>.
                   </div>
 
-                  <button className="premium-skip" onClick={() => setShowPremium(false)}>
+                  <button className="premium-skip" onClick={() => setShowPremium(false)} style={{marginTop:12}}>
                     Talvez depois
                   </button>
+
 
                   <div className="premium-footer-note">
                     Conectado como <strong>{authUser.email}</strong> · <button className="link-btn" onClick={handleLogout}>Sair</button>
