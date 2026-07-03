@@ -3885,9 +3885,8 @@ button { cursor: pointer; border: none; background: none; color: inherit; }
     min-width: 26px;
   }
   .dual-players-container {
-    padding: 6px 8px;
-    padding-top: 14px;
-    gap: 4px;
+    padding: 8px 10px 10px;
+    gap: 6px;
   }
   .dual-player-search-options {
     flex-wrap: wrap;
@@ -3895,7 +3894,21 @@ button { cursor: pointer; border: none; background: none; color: inherit; }
   .dual-player-search-q {
     display: none;
   }
+  .dual-player-state {
+    font-size: 0;
+    padding: 4px;
+    gap: 0;
+  }
+  .dual-player-state .dual-player-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .dual-player-tag {
+    font-size: 0.58rem;
+    padding: 2px 6px;
+  }
 }
+
 
 /* Oculta players completamente */
 .dual-players-container.hidden {
