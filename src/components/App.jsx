@@ -82,7 +82,7 @@ export default function App() {
   const voiceStreamRef = useRef(null)
   const [connected, setConnected] = useState(true)
   const [showPremium, setShowPremium] = useState(false)
-  const [isPremium, setIsPremium] = useLocalStorage('cifras_premium', false)
+  
   const [authUser, setAuthUser] = useLocalStorage('cifras_user', null)
   const [showAuth, setShowAuth] = useState(false)
   const [authMode, setAuthMode] = useState('login')
