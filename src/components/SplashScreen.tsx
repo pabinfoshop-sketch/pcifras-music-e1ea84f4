@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import logoAsset from "../assets/pcifras-logo.jpg.asset.json";
+
+const LOGO_URL = "/icons/icon-192.png";
 
 
 export default function SplashScreen({ onDone }: { onDone: () => void }) {
@@ -54,7 +55,7 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
         </div>
 
         <img
-          src={logoAsset.url}
+          src={LOGO_URL}
           alt="PCifrasMusic"
           width={180}
           height={180}
