@@ -308,26 +308,37 @@ export default function App() {
     setScreen('view')
   }, [])
 
-  const handleAdd = useCallback(song => {
+  const handleAdd = useCallback(async song => {
     setShowModal(false)
-    setSongs(prev => [...prev, song])
-    setCurrentSong(song)
+    let toStore = song
+    if (authUser?.id) {
+      const newId = await upsertCloudSong(authUser.id, song)
+      if (newId && newId !== song.id) toStore = { ...song, id: newId }
+    }
+    setSongs(prev => [...prev, toStore])
+    setCurrentSong(toStore)
     setTranspose(0)
-    setBpm(song.bpm || 80)
+    setBpm(toStore.bpm || 80)
     setScreen('view')
     setTimeout(() => showToast('Música salva no seu repertório'), 100)
-  }, [showToast])
+  }, [authUser, setSongs, showToast])
 
   const handleDelete = useCallback(song => {
     setConfirmDelete(song)
   }, [])
 
   const handleToggleFavorite = useCallback(id => {
-    setSongs(prev => prev.map(s => s.id === id ? { ...s, favorite: !s.favorite } : s))
-  }, [setSongs])
+    setSongs(prev => {
+      const next = prev.map(s => s.id === id ? { ...s, favorite: !s.favorite } : s)
+      const updated = next.find(s => s.id === id)
+      if (authUser?.id && updated) upsertCloudSong(authUser.id, updated)
+      return next
+    })
+  }, [authUser, setSongs])
 
   const confirmDeleteSong = useCallback(() => {
     if (!confirmDelete) return
+    if (authUser?.id) deleteCloudSong(authUser.id, confirmDelete.id)
     setSongs(prev => prev.filter(s => s.id !== confirmDelete.id))
     if (currentSong?.id === confirmDelete.id) {
       const remaining = songs.filter(s => s.id !== confirmDelete.id)
@@ -336,7 +347,7 @@ export default function App() {
     }
     setConfirmDelete(null)
     showToast('Música removida do seu repertório')
-  }, [confirmDelete, currentSong, songs, setSongs, showToast])
+  }, [authUser, confirmDelete, currentSong, songs, setSongs, showToast])
 
   const stopMetro = useCallback(() => {
     if (metroRef.current) { clearInterval(metroRef.current); metroRef.current = null }
