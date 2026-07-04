@@ -1730,7 +1730,7 @@ function SetlistCard({ sl, onSelect, onDuplicate, onDelete }) {
         <div className="setlist-card-meta">
           <span>🎵 {count} {count === 1 ? 'música' : 'músicas'}</span>
           <span className="setlist-card-dot">·</span>
-          <span>▶ pronto pra tocar</span>
+          <span>▶ pronto para tocar</span>
         </div>
       </div>
       <div className="setlist-card-actions" onClick={e => e.stopPropagation()}>
