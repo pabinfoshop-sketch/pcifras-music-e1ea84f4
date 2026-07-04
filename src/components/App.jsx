@@ -1646,64 +1646,149 @@ export default function App() {
 }
 
 function EmptySetlist({ onCreate }) {
+  const uses = [
+    { ico: '🎵', label: 'Ensaios com a banda' },
+    { ico: '⛪', label: 'Cultos e louvor' },
+    { ico: '🎤', label: 'Shows e apresentações' },
+    { ico: '📜', label: 'Sequência de músicas' },
+  ]
   return (
-    <div className="empty-state">
-      <div className="empty-state-illustration" aria-hidden="true">
-        <div className="empty-state-circle">📋</div>
-        <span className="empty-state-note note-1">♪</span>
-        <span className="empty-state-note note-2">♫</span>
-        <span className="empty-state-note note-3">♩</span>
-      </div>
-      <h3 className="empty-state-title">Nenhum repertório ainda</h3>
-      <p className="empty-state-text">
-        Organize suas músicas por ensaios, shows ou culto.<br />
-        Crie seu primeiro repertório em segundos.
+    <div className="setlist-empty">
+      <div className="setlist-empty-icon" aria-hidden="true">📋</div>
+      <div className="setlist-empty-eyebrow">Seu palco começa aqui</div>
+      <h3 className="setlist-empty-title">Monte seu primeiro repertório</h3>
+      <p className="setlist-empty-text">
+        Junte suas músicas em uma sequência pronta para tocar — sem folhas, sem bagunça.
       </p>
+      <ul className="setlist-empty-uses">
+        {uses.map(u => (
+          <li key={u.label}><span>{u.ico}</span>{u.label}</li>
+        ))}
+      </ul>
       <button className="empty-state-cta" onClick={onCreate}>+ Criar repertório</button>
+      <div className="setlist-empty-hint">Leva menos de 10 segundos</div>
     </div>
   )
 }
 
-function SetlistList({ setlists, onSelect, onCreate }) {
+function SetlistCard({ sl, onSelect, onDuplicate, onDelete }) {
+  const count = sl.songIds?.length || 0
+  return (
+    <div className="setlist-card" onClick={() => onSelect(sl)}>
+      <div className="setlist-card-thumb" aria-hidden="true">
+        <span>📋</span>
+        <span className="setlist-card-count">{count}</span>
+      </div>
+      <div className="setlist-card-body">
+        <div className="setlist-card-name">{sl.name}</div>
+        <div className="setlist-card-meta">
+          <span>🎵 {count} {count === 1 ? 'música' : 'músicas'}</span>
+          <span className="setlist-card-dot">·</span>
+          <span>▶ pronto pra tocar</span>
+        </div>
+      </div>
+      <div className="setlist-card-actions" onClick={e => e.stopPropagation()}>
+        {onDuplicate && (
+          <button className="setlist-icon-btn" title="Duplicar" onClick={() => onDuplicate(sl)}>⧉</button>
+        )}
+        {onDelete && (
+          <button className="setlist-icon-btn setlist-icon-danger" title="Remover" onClick={() => onDelete(sl.id)}>🗑</button>
+        )}
+        <span className="setlist-card-play" aria-hidden="true">▶</span>
+      </div>
+    </div>
+  )
+}
+
+function SetlistToolbar({ count, sort, setSort, onCreate, isPremium, onUpgrade }) {
+  return (
+    <div className="setlist-toolbar">
+      <div className="setlist-toolbar-info">
+        <strong>{count}</strong> {count === 1 ? 'repertório' : 'repertórios'}
+      </div>
+      <div className="setlist-toolbar-actions">
+        <select
+          className="setlist-sort"
+          value={sort}
+          onChange={e => setSort(e.target.value)}
+          aria-label="Ordenar"
+          onClick={e => e.stopPropagation()}
+        >
+          <option value="recent">Mais recentes</option>
+          <option value="name">Nome (A–Z)</option>
+          <option value="size">Mais músicas</option>
+        </select>
+        <button className="setlist-new-btn" onClick={onCreate}>+ Novo</button>
+      </div>
+      {!isPremium && (
+        <button className="setlist-toolbar-pro" onClick={onUpgrade} title="Recursos Premium">
+          <span className="premium-hint">Premium</span>
+        </button>
+      )}
+    </div>
+  )
+}
+
+function useSortedSetlists(setlists, sort) {
+  const arr = [...setlists]
+  if (sort === 'name') arr.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+  else if (sort === 'size') arr.sort((a, b) => (b.songIds?.length || 0) - (a.songIds?.length || 0))
+  return arr
+}
+
+function SetlistList({ setlists, isPremium, onSelect, onCreate, onDuplicate, onDelete, onUpgrade }) {
+  const [sort, setSort] = useState('recent')
+  const sorted = useSortedSetlists(setlists, sort)
   return (
     <div className="sidebar-songs">
-      <button className="sidebar-add-btn" onClick={onCreate}>+ Novo Repertório</button>
       {setlists.length === 0 ? (
         <EmptySetlist onCreate={onCreate} />
       ) : (
-        setlists.map(sl => (
-          <div key={sl.id} className="song-card" onClick={() => onSelect(sl)}>
-            <div className="song-card-info">
-              <div className="song-card-name">📋 {sl.name}</div>
-              <div className="song-card-artist">{sl.songIds.length} músicas</div>
-            </div>
-            <span className="song-card-key">▶</span>
+        <>
+          <SetlistToolbar
+            count={setlists.length}
+            sort={sort}
+            setSort={setSort}
+            onCreate={onCreate}
+            isPremium={isPremium}
+            onUpgrade={onUpgrade}
+          />
+          <div className="setlist-grid">
+            {sorted.map(sl => (
+              <SetlistCard key={sl.id} sl={sl} onSelect={onSelect} onDuplicate={onDuplicate} onDelete={onDelete} />
+            ))}
           </div>
-        ))
+        </>
       )}
     </div>
   )
 }
 
-function MobileSetlistList({ setlists, onSelect, onCreate }) {
+function MobileSetlistList({ setlists, isPremium, onSelect, onCreate, onDuplicate, onDelete, onUpgrade }) {
+  const [sort, setSort] = useState('recent')
+  const sorted = useSortedSetlists(setlists, sort)
   return (
     <div>
-      <button className="msearch-btn" style={{width:'100%',marginBottom:12}} onClick={onCreate}>+ Novo Repertório</button>
       {setlists.length === 0 ? (
         <EmptySetlist onCreate={onCreate} />
       ) : (
-        <div className="song-list">
-          {setlists.map(sl => (
-            <div key={sl.id} className="song-card" onClick={() => onSelect(sl)}>
-              <div className="song-card-info">
-                <div className="song-card-name">📋 {sl.name}</div>
-                <div className="song-card-artist">{sl.songIds.length} músicas</div>
-              </div>
-              <span className="song-card-key">▶</span>
-            </div>
-          ))}
-        </div>
+        <>
+          <SetlistToolbar
+            count={setlists.length}
+            sort={sort}
+            setSort={setSort}
+            onCreate={onCreate}
+            isPremium={isPremium}
+            onUpgrade={onUpgrade}
+          />
+          <div className="setlist-grid">
+            {sorted.map(sl => (
+              <SetlistCard key={sl.id} sl={sl} onSelect={onSelect} onDuplicate={onDuplicate} onDelete={onDelete} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   )
 }
+
