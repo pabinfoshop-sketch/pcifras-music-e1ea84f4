@@ -1168,6 +1168,7 @@ export default function App() {
         </div>
       </div>
 
+      <OfflineBanner />
       <InstallAppButton />
 
       <footer className="app-footer" aria-label="Rodapé">
