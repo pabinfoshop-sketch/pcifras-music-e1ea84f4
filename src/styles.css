@@ -4266,3 +4266,14 @@ button { cursor: pointer; border: none; background: none; color: inherit; }
 .account-btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(255,152,0,0.30); }
 .account-btn-ghost{ background:rgba(255,255,255,0.04); color:#d8dde8; border:1px solid rgba(255,255,255,0.08); }
 .account-btn-ghost:hover{ background:rgba(255,255,255,0.08); }
+
+/* PWA Install button */
+.install-app-btn{
+  position:fixed; right:16px; bottom:88px; z-index:9000;
+  padding:12px 18px; border-radius:999px; border:none; cursor:pointer;
+  background:linear-gradient(90deg,#7c6df0,#5b8def); color:#fff;
+  font-size:0.92rem; font-weight:600; letter-spacing:0.2px;
+  box-shadow:0 10px 26px rgba(92,109,240,0.45);
+  transition:transform 0.15s, box-shadow 0.15s;
+}
+.install-app-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(92,109,240,0.55); }
