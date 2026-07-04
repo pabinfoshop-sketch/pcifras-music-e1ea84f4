@@ -1071,10 +1071,11 @@ export default function App() {
               <div className="topbar-brand">
                 <span className="topbar-brand-mark">♪</span>
                 <div className="topbar-brand-text">
-                  <span className="topbar-brand-title">PCifras<span className="topbar-brand-accent">Music</span></span>
+                  <span className="topbar-brand-title">PCifras<span className="topbar-brand-accent">Music</span>{isPremium && <span className="pro-badge">PRO</span>}</span>
                   <span className="topbar-brand-sub">Cifras & Repertórios</span>
                 </div>
               </div>
+              {(loadingCloud || savingSong) && <span className="inline-spinner" aria-label="Carregando" title={savingSong ? 'Salvando…' : 'Carregando…'} />}
               <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={openSupport} title={isPremium ? 'Premium Ativo' : 'Apoiar o Projeto'}>{isPremium ? '⭐' : '☕'}</button>
               <button className="tbtn" onClick={() => setShowModal(true)} title="Adicionar música">+</button>
             </div>
