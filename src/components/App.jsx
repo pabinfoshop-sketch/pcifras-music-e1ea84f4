@@ -1875,3 +1875,58 @@ function MobileSetlistList({ setlists, isPremium, onSelect, onCreate, onDuplicat
   )
 }
 
+
+function PremiumStatusStrip({ isPremium, authUser, songCount, songLimit, onUpgrade, onSignup }) {
+  if (isPremium && !(authUser?.trialEnd && !authUser?.premiumSince)) {
+    return null
+  }
+  const inTrial = authUser?.trialEnd && !authUser?.premiumSince
+  const trialDays = authUser?.trialDays || 0
+  const guest = !authUser
+
+  if (inTrial) {
+    return (
+      <div className="premium-strip premium-strip-trial" role="status">
+        <span className="premium-strip-icon" aria-hidden="true">🎉</span>
+        <span className="premium-strip-text">
+          <strong>{trialDays} {trialDays === 1 ? 'dia restante' : 'dias restantes'}</strong> do seu período de teste
+        </span>
+        <button className="premium-strip-cta" onClick={onUpgrade}>Assinar</button>
+      </div>
+    )
+  }
+
+  const nearLimit = songCount >= songLimit - 1
+  return (
+    <div className="premium-strip" role="status">
+      <span className="premium-strip-icon" aria-hidden="true">👑</span>
+      <span className="premium-strip-text">
+        {guest
+          ? <><strong>7 dias grátis</strong> de Premium — sem cartão de crédito</>
+          : nearLimit
+            ? <><strong>{songCount}/{songLimit} músicas grátis</strong> — libere ilimitadas no Premium</>
+            : <><strong>Turbine seu preparo</strong> — Premium com backup, sync e ferramentas de palco</>}
+      </span>
+      <button className="premium-strip-cta" onClick={guest ? onSignup : onUpgrade}>
+        {guest ? 'Começar grátis' : 'Ver Premium'}
+      </button>
+    </div>
+  )
+}
+
+function PremiumTeaserCard({ atLimit, remaining, onUpgrade }) {
+  return (
+    <button className="premium-teaser-card" onClick={onUpgrade} type="button">
+      <div className="premium-teaser-badge">👑 Premium</div>
+      <div className="premium-teaser-title">
+        {atLimit
+          ? 'Você chegou ao limite do plano gratuito'
+          : `Só faltam ${remaining} ${remaining === 1 ? 'música' : 'músicas'} no plano gratuito`}
+      </div>
+      <div className="premium-teaser-sub">
+        Assine e tenha músicas e repertórios ilimitados, backup na nuvem e ferramentas de palco.
+      </div>
+      <div className="premium-teaser-cta">Ver planos ›</div>
+    </button>
+  )
+}
