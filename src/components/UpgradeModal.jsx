@@ -1,40 +1,40 @@
 export default function UpgradeModal({ reason, onClose, onSubscribe }) {
   const headlines = {
     songs: {
-      eyebrow: 'Limite do plano grátis',
-      title: 'Desbloqueie músicas ilimitadas',
-      sub: 'Você chegou ao limite de 5 músicas do plano grátis. Assine o Premium e leve seu repertório sem limites.',
+      eyebrow: 'Você atingiu o limite do plano gratuito',
+      title: 'Tenha músicas ilimitadas com o Premium',
+      sub: 'O plano gratuito inclui até 5 músicas. Assine o Premium e monte uma biblioteca sem limites.',
     },
     setlists: {
-      eyebrow: 'Limite do plano grátis',
+      eyebrow: 'Você atingiu o limite do plano gratuito',
       title: 'Repertórios ilimitados no Premium',
-      sub: 'O plano grátis permite apenas 1 repertório. Assine o Premium e monte quantos quiser para cada culto, ensaio ou show.',
+      sub: 'No plano gratuito você cria 1 repertório. No Premium, monte quantos precisar — um para cada culto, ensaio ou show.',
     },
     cloud: {
       eyebrow: 'Recurso exclusivo do Premium',
-      title: 'Sincronize suas músicas na nuvem',
-      sub: 'Tenha backup automático e acesse suas cifras em qualquer dispositivo. Faça upgrade para continuar.',
+      title: 'Backup automático na nuvem',
+      sub: 'Suas cifras salvas com segurança e disponíveis em qualquer dispositivo. Assine o Premium para ativar.',
     },
     advanced: {
       eyebrow: 'Recurso exclusivo do Premium',
-      title: 'Desbloqueie repertórios avançados',
-      sub: 'Ferramentas de palco, ensaio e organização para levar seu preparo a outro nível.',
+      title: 'Ferramentas avançadas de ensaio e palco',
+      sub: 'Organize melhor, ensaie com precisão e apresente com confiança. Feito para músicos que levam a sério.',
     },
     generic: {
       eyebrow: 'PCifras Music Premium',
-      title: 'Toque com liberdade total',
-      sub: 'Cifras, repertórios e recursos de palco sem limites. Feito para músicos que levam a sério.',
+      title: 'O app completo para o músico moderno',
+      sub: 'Cifras, repertórios e ferramentas de palco sem limites. Toque com liberdade total.',
     },
   }
   const h = headlines[reason] || headlines.generic
 
   const benefits = [
-    { ico: '☁️', title: 'Backup na nuvem', desc: 'Nunca perca uma cifra' },
+    { ico: '☁️', title: 'Backup na nuvem', desc: 'Suas cifras protegidas, sempre' },
     { ico: '🔄', title: 'Sync entre dispositivos', desc: 'Celular, tablet e web' },
-    { ico: '🎼', title: 'Repertórios avançados', desc: 'Organize por culto, show ou banda' },
-    { ico: '🎤', title: 'Ferramentas de palco', desc: 'Modo apresentação e auto-scroll' },
-    { ico: '🎚️', title: 'Recursos de ensaio', desc: 'Afinador, metrônomo e transporte' },
-    { ico: '⚡', title: 'Prioridade em novidades', desc: 'Recursos novos primeiro' },
+    { ico: '🎼', title: 'Repertórios ilimitados', desc: 'Um para cada culto, show ou banda' },
+    { ico: '🎤', title: 'Ferramentas de palco', desc: 'Modo apresentação e rolagem automática' },
+    { ico: '🎚️', title: 'Ensaio profissional', desc: 'Afinador, metrônomo e transposição' },
+    { ico: '⚡', title: 'Novidades em primeira mão', desc: 'Acesso antecipado a novos recursos' },
   ]
 
   return (
@@ -52,8 +52,8 @@ export default function UpgradeModal({ reason, onClose, onSubscribe }) {
         <div className="premium-trial">
           <div className="premium-trial-badge">7 DIAS GRÁTIS</div>
           <div className="premium-trial-text">
-            <strong>Teste tudo sem pagar nada.</strong>
-            <span>Sem cartão de crédito. Cancele quando quiser.</span>
+            <strong>Experimente tudo, sem pagar nada.</strong>
+            <span>Sem cartão de crédito. Cancele a qualquer momento.</span>
           </div>
         </div>
 
@@ -78,9 +78,9 @@ export default function UpgradeModal({ reason, onClose, onSubscribe }) {
                 <span className="premium-amount">19,90</span>
                 <span className="premium-period">/mês</span>
               </div>
-              <div className="premium-price-note">Ou economize com o plano anual</div>
+              <div className="premium-price-note">Economize ainda mais no plano anual</div>
             </div>
-            <div className="premium-price-tag">Mais popular</div>
+            <div className="premium-price-tag">Mais escolhido</div>
           </div>
 
           <button className="premium-cta" onClick={onSubscribe}>
@@ -88,7 +88,7 @@ export default function UpgradeModal({ reason, onClose, onSubscribe }) {
           </button>
 
           <div className="premium-trust">
-            <span>🔒 Cobrança segura</span>
+            <span>🔒 Pagamento seguro</span>
             <span>·</span>
             <span>⚡ Acesso imediato</span>
             <span>·</span>
@@ -97,7 +97,7 @@ export default function UpgradeModal({ reason, onClose, onSubscribe }) {
         </div>
 
         <button className="premium-later" onClick={onClose}>
-          Continuar no plano grátis
+          Continuar no plano gratuito
         </button>
       </div>
     </div>

@@ -4,7 +4,7 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
   const trialActive = user.trialEnd && new Date(user.trialEnd).getTime() > Date.now()
   const trialDays = user.trialDays || 0
   const paid = !!user.paidActive
-  const planLabel = paid ? 'PREMIUM' : (trialActive ? 'TESTE GRÁTIS' : 'GRÁTIS')
+  const planLabel = paid ? 'PREMIUM' : (trialActive ? 'TESTE GRATUITO' : 'GRATUITO')
   const planClass = paid ? 'account-plan-pro' : (trialActive ? 'account-plan-trial' : 'account-plan-free')
 
   const handleRestore = onRestore || (() => window.location.reload())
@@ -13,7 +13,7 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
 
   const benefits = [
     { ico: '☁️', label: 'Backup na nuvem' },
-    { ico: '🔄', label: 'Sync entre dispositivos' },
+    { ico: '🔄', label: 'Sincronização entre dispositivos' },
     { ico: '🎼', label: 'Repertórios ilimitados' },
     { ico: '🎤', label: 'Ferramentas de palco' },
   ]
@@ -46,13 +46,13 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
                 <div className="account-trial-info">
                   <span className="account-trial-icon">🎉</span>
                   <span>
-                    <strong>{trialDays} {trialDays === 1 ? 'dia restante' : 'dias restantes'}</strong> do seu teste grátis
+                    <strong>{trialDays} {trialDays === 1 ? 'dia restante' : 'dias restantes'}</strong> do seu período de teste
                   </span>
                 </div>
               )}
               {!paid && !trialActive && (
                 <p className="account-plan-desc">
-                  Você está no plano gratuito. Desbloqueie recursos ilimitados no Premium.
+                  Você está no plano gratuito. Assine o Premium para liberar todos os recursos.
                 </p>
               )}
               {paid && (
@@ -80,7 +80,7 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
             <section className="account-card account-benefits-card">
               <div className="account-section-head">
                 <span className="account-section-eyebrow">Premium</span>
-                <h3 className="account-section-title">Por que assinar?</h3>
+                <h3 className="account-section-title">Tudo o que você ganha</h3>
               </div>
               <ul className="account-benefits">
                 {benefits.map(b => (
@@ -108,8 +108,8 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
                 <button className="account-list-item" onClick={handleRestore}>
                   <span className="ali-ico">🔄</span>
                   <span className="ali-text">
-                    <strong>Restaurar conta</strong>
-                    <span>Sincronize compras e dados</span>
+                    <strong>Restaurar assinatura</strong>
+                    <span>Recupere compras e dados da nuvem</span>
                   </span>
                   <span className="ali-chev">›</span>
                 </button>
@@ -119,7 +119,7 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
                   <span className="ali-ico">💬</span>
                   <span className="ali-text">
                     <strong>Suporte</strong>
-                    <span>Fale com a gente</span>
+                    <span>Fale direto com nosso time</span>
                   </span>
                   <span className="ali-chev">›</span>
                 </button>
