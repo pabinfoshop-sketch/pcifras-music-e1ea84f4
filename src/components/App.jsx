@@ -1228,6 +1228,17 @@ export default function App() {
                 ),
               },
               {
+                key: 'tools',
+                label: 'Ferramentas',
+                active: screen === 'tools',
+                onClick: () => { setScreen('tools'); stopMetro() },
+                icon: (
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-2.4 2.6-2.6z" />
+                  </svg>
+                ),
+              },
+              {
                 key: 'account',
                 label: authUser ? (authUser.name.split(' ')[0].slice(0, 10)) : 'Entrar',
                 active: screen === 'account',
