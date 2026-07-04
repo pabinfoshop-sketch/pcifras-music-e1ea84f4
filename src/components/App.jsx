@@ -9,6 +9,7 @@ import YouTubePlayer from './YouTubePlayer'
 import AuthModal from './AuthModal'
 import AuthScreen from './AuthScreen'
 import UpgradeModal from './UpgradeModal'
+import AccountScreen from './AccountScreen'
 import ErrorBoundary from './ErrorBoundary'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { parseCifraText } from '../utils/parser'
@@ -1034,6 +1035,15 @@ export default function App() {
               )}
             </div>
           </>
+        ) : screen === 'account' && authUser ? (
+          <AccountScreen
+            user={authUser}
+            isPremium={isPremium}
+            onBack={() => setScreen('songs')}
+            onSubscribe={() => setShowUpgrade('generic')}
+            onManage={() => showToast('O portal de gerenciamento estará disponível quando a assinatura for ativada.')}
+            onLogout={() => { handleLogout(); setScreen('songs') }}
+          />
         ) : (
           <>
             <div className="topbar">
@@ -1122,7 +1132,7 @@ export default function App() {
             <span className="nav-icon-wrap"><span className="nav-icon">📋</span></span>
             <span className="nav-label">Repertórios</span>
           </div>
-          <div className={`nav-item profile-btn${isPremium ? ' is-premium' : ''}`} onClick={() => { if (authUser) { setShowPremium(true) } else { setShowAuth(true); setAuthMode('login') } }}>
+          <div className={`nav-item profile-btn${isPremium ? ' is-premium' : ''}${screen === 'account' ? ' active' : ''}`} onClick={() => { if (authUser) { setScreen('account'); stopMetro() } else { setShowAuth(true); setAuthMode('login') } }}>
             <span className="nav-icon-wrap">
               {authUser ? (
                 <span className="nav-avatar">{authUser.name.charAt(0).toUpperCase()}</span>
