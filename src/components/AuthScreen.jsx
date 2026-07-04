@@ -94,6 +94,12 @@ export default function AuthScreen({ onAuth, onGoogle }) {
             ? '🎉 7 dias de Premium grátis — sem cartão de crédito.'
             : '🔒 Suas músicas ficam salvas e sincronizadas na sua conta.'}
         </p>
+
+        <div className="auth-trust-row">
+          <span>🔒 Dados seguros</span>
+          <span>·</span>
+          <span>✕ Cancele quando quiser</span>
+        </div>
       </div>
     </div>
   )
