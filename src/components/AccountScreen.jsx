@@ -46,13 +46,13 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
                 <div className="account-trial-info">
                   <span className="account-trial-icon">🎉</span>
                   <span>
-                    <strong>{trialDays} {trialDays === 1 ? 'dia restante' : 'dias restantes'}</strong> do seu teste grátis
+                    <strong>{trialDays} {trialDays === 1 ? 'dia restante' : 'dias restantes'}</strong> do seu período de teste
                   </span>
                 </div>
               )}
               {!paid && !trialActive && (
                 <p className="account-plan-desc">
-                  Você está no plano gratuito. Desbloqueie recursos ilimitados no Premium.
+                  Você está no plano gratuito. Assine o Premium para liberar todos os recursos.
                 </p>
               )}
               {paid && (
