@@ -8,7 +8,7 @@ function isTabLine(text) {
   return /^[EeADGB]\|[:=.\-0-9|()hps/\\]*\|?\s*$/.test(text.trim())
 }
 
-export default function SongView({ song, transpose, viewMode, studyMode, currentKey, onToggleFavorite, onExport }) {
+export default function SongView({ song, transpose, viewMode, studyMode, currentKey, onToggleFavorite, onExport, onTranspose }) {
   const [showChords, setShowChords] = useState(false)
   const [simplified, setSimplified] = useState(false)
   const [hideTab, setHideTab] = useState(false)
