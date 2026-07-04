@@ -30,8 +30,8 @@ export default function AuthScreen({ onAuth, onGoogle }) {
           <h1 className="auth-screen-title">PCifras Music</h1>
           <p className="auth-screen-sub">
             {mode === 'login'
-              ? 'Entre para acessar seu repertório'
-              : 'Crie sua conta grátis e comece a tocar'}
+              ? 'Entre e acesse seu repertório'
+              : 'Crie sua conta gratuita e comece agora'}
           </p>
         </div>
 
