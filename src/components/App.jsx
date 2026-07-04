@@ -61,6 +61,7 @@ export default function App() {
   const [filter, setFilter] = useState('')
   const [showFavorites, setShowFavorites] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [modalInitialTab, setModalInitialTab] = useState('search')
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [toast, setToast] = useState('')
   const [loadingCloud, setLoadingCloud] = useState(false)
