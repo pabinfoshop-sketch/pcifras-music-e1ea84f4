@@ -119,7 +119,7 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
                   <span className="ali-ico">💬</span>
                   <span className="ali-text">
                     <strong>Suporte</strong>
-                    <span>Fale com a gente</span>
+                    <span>Fale direto com nosso time</span>
                   </span>
                   <span className="ali-chev">›</span>
                 </button>
