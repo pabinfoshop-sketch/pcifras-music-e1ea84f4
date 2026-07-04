@@ -275,6 +275,29 @@ export default function App() {
     return () => { mounted = false; sub.subscription.unsubscribe() }
   }, [refreshProfile, setAuthUser])
 
+  // Carrega repertório do usuário da nuvem ao logar; mescla com músicas locais.
+  useEffect(() => {
+    if (!authUser?.id) return
+    let cancelled = false
+    ;(async () => {
+      const cloud = await loadCloudSongs(authUser.id)
+      if (cancelled) return
+      setSongs(prev => {
+        const byId = new Map()
+        cloud.forEach(s => byId.set(s.id, s))
+        // Migra músicas locais ainda não sincronizadas
+        prev.forEach(s => {
+          if (!byId.has(s.id)) {
+            byId.set(s.id, s)
+            upsertCloudSong(authUser.id, s)
+          }
+        })
+        return Array.from(byId.values())
+      })
+    })()
+    return () => { cancelled = true }
+  }, [authUser?.id, setSongs])
+
   const handleGoogleLogin = useCallback(async () => {
     try {
       const result = await lovable.auth.signInWithOAuth('google', {
