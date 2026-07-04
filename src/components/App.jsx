@@ -1007,7 +1007,7 @@ export default function App() {
         ) : screen === 'setlists' ? (
           <>
             <div className="topbar">
-              <div className="topbar-title">📋 Repertórios</div>
+              <div className="topbar-title">📋 Repertórios {isPremium && <span className="pro-badge">PRO</span>}</div>
               <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={openSupport} title={isPremium ? 'Premium Ativo' : 'Apoiar o Projeto'}>{isPremium ? '⭐' : '☕'}</button>
               <button className="tbtn" onClick={createSetlist}>+</button>
             </div>
