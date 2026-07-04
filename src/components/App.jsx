@@ -86,6 +86,7 @@ export default function App() {
   const [showPremium, setShowPremium] = useState(false)
   
   const [authUser, setAuthUser] = useLocalStorage('cifras_user', null)
+  const [authLoading, setAuthLoading] = useState(true)
   const [showAuth, setShowAuth] = useState(false)
   const [authMode, setAuthMode] = useState('login')
   const [showSupport, setShowSupport] = useState(false)
