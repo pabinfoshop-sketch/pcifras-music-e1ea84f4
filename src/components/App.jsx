@@ -694,6 +694,24 @@ export default function App() {
     showToast('Cifra atualizada!')
   }, [currentSong, editRawText, editOriginalUrl, editPlaybackUrl, setSongs, showToast])
 
+  if (authLoading) {
+    return (
+      <div className="auth-screen"><div className="auth-screen-card" style={{textAlign:'center'}}>
+        <div className="auth-screen-logo">🎸</div>
+        <p className="auth-screen-sub">Carregando sua sessão…</p>
+      </div></div>
+    )
+  }
+
+  if (!authUser) {
+    return (
+      <>
+        <AuthScreen onAuth={handleAuth} onGoogle={handleGoogleLogin} />
+        <Toast message={toast} />
+      </>
+    )
+  }
+
   return (
     <ErrorBoundary>
     <div className="app-layout">
