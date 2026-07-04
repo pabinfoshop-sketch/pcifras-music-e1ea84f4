@@ -1183,33 +1183,79 @@ export default function App() {
       </div>
 
       {/* ─── BOTTOM NAV ─── */}
-      <div className="bottom-nav mobile-only">
+      <nav className="bottom-nav mobile-only" aria-label="Navegação principal">
         <div className="nav-brand">
           <span className="nav-brand-main">PauloC</span>
           <span className="nav-brand-r">®</span>
         </div>
-        <div className="nav-items">
-          <div className={`nav-item${screen === 'songs' ? ' active' : ''}`} onClick={() => { setScreen('songs'); stopMetro(); setActiveSetlist(null) }}>
-            <span className="nav-icon-wrap"><span className="nav-icon">♫</span></span>
-            <span className="nav-label">Músicas</span>
-          </div>
-          <div className={`nav-item${screen === 'setlists' || screen === 'setlist-view' ? ' active' : ''}`} onClick={() => { setScreen('setlists'); stopMetro() }}>
-            <span className="nav-icon-wrap"><span className="nav-icon">📋</span></span>
-            <span className="nav-label">Repertórios</span>
-          </div>
-          <div className={`nav-item profile-btn${isPremium ? ' is-premium' : ''}${screen === 'account' ? ' active' : ''}`} onClick={() => { if (authUser) { setScreen('account'); stopMetro() } else { setShowAuth(true); setAuthMode('login') } }}>
-            <span className="nav-icon-wrap">
-              {authUser ? (
-                <span className="nav-avatar">{authUser.name.charAt(0).toUpperCase()}</span>
-              ) : (
-                <span className="nav-icon">🔑</span>
-              )}
-              {isPremium && <span className="nav-premium-badge">⭐</span>}
-            </span>
-            <span className="nav-label">{authUser ? (authUser.name.split(' ')[0].slice(0, 8)) : 'Entrar'}</span>
-          </div>
+        <div className="nav-items" role="tablist">
+          {(() => {
+            const items = [
+              {
+                key: 'songs',
+                label: 'Músicas',
+                active: screen === 'songs',
+                onClick: () => { setScreen('songs'); stopMetro(); setActiveSetlist(null) },
+                icon: (
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                  </svg>
+                ),
+              },
+              {
+                key: 'setlists',
+                label: 'Repertórios',
+                active: screen === 'setlists' || screen === 'setlist-view',
+                onClick: () => { setScreen('setlists'); stopMetro() },
+                icon: (
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="4" y="4" width="16" height="16" rx="3" />
+                    <path d="M8 9h8M8 13h8M8 17h5" />
+                  </svg>
+                ),
+              },
+              {
+                key: 'account',
+                label: authUser ? (authUser.name.split(' ')[0].slice(0, 10)) : 'Entrar',
+                active: screen === 'account',
+                onClick: () => { if (authUser) { setScreen('account'); stopMetro() } else { setShowAuth(true); setAuthMode('login') } },
+                isProfile: true,
+              },
+            ]
+            return items.map(it => (
+              <button
+                key={it.key}
+                type="button"
+                role="tab"
+                aria-selected={it.active}
+                aria-label={it.label}
+                className={`nav-item${it.active ? ' active' : ''}${it.isProfile ? ` profile-btn${isPremium ? ' is-premium' : ''}` : ''}`}
+                onClick={it.onClick}
+              >
+                <span className="nav-icon-wrap">
+                  {it.isProfile ? (
+                    authUser ? (
+                      <span className="nav-avatar">{authUser.name.charAt(0).toUpperCase()}</span>
+                    ) : (
+                      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    )
+                  ) : (
+                    <span className="nav-icon">{it.icon}</span>
+                  )}
+                  {it.isProfile && isPremium && <span className="nav-premium-badge" aria-label="Premium">⭐</span>}
+                </span>
+                <span className="nav-label">{it.label}</span>
+              </button>
+            ))
+          })()}
         </div>
-      </div>
+      </nav>
+
 
       <OfflineBanner />
       <InstallAppButton />
