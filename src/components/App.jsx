@@ -705,13 +705,13 @@ export default function App() {
 
   const handleCloudSync = useCallback(async () => {
     if (!authUser) { showToast('Entre na sua conta para continuar'); return }
-    if (!isPremium) { showToast('Recurso exclusivo do plano Premium'); return }
+    if (!isPremium) { setShowUpgrade('cloud'); return }
     showToast('Backup na nuvem em breve — seus dados seguem salvos neste dispositivo.')
   }, [authUser, isPremium, showToast])
 
   const handleCloudRestore = useCallback(async () => {
     if (!authUser) { showToast('Entre na sua conta para continuar'); return }
-    if (!isPremium) { showToast('Recurso exclusivo do plano Premium'); return }
+    if (!isPremium) { setShowUpgrade('cloud'); return }
     showToast('Restauração na nuvem em breve — assim que o backup for ativado.')
   }, [authUser, isPremium, showToast])
 
