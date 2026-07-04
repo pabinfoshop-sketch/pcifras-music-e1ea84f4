@@ -36,11 +36,11 @@ export default function AuthModal({ mode, setMode, onAuth, onGoogle, onClose }) 
           <div className="auth-logo-mark">♫</div>
           <div className="auth-eyebrow">PCifras Music</div>
           <h2 className="auth-title-v2">
-            {isRegister ? 'Crie sua conta grátis' : 'Bem-vindo de volta'}
+            {isRegister ? 'Crie sua conta gratuita' : 'Bem-vindo de volta'}
           </h2>
           <p className="auth-sub-v2">
             {isRegister
-              ? 'Sincronize suas cifras e libere todos os recursos por 7 dias.'
+              ? 'Sincronize suas cifras e experimente o Premium por 7 dias.'
               : 'Acesse suas cifras e repertórios de qualquer lugar.'}
           </p>
           {isRegister && (
@@ -53,9 +53,9 @@ export default function AuthModal({ mode, setMode, onAuth, onGoogle, onClose }) 
 
         {isRegister && (
           <ul className="auth-benefits">
-            <li><span className="ab-ico">☁️</span> Sincronize músicas entre dispositivos</li>
-            <li><span className="ab-ico">🎼</span> Salve repertórios ilimitados</li>
-            <li><span className="ab-ico">👑</span> Libere recursos premium do app</li>
+            <li><span className="ab-ico">☁️</span> Sincronização entre dispositivos</li>
+            <li><span className="ab-ico">🎼</span> Repertórios ilimitados</li>
+            <li><span className="ab-ico">👑</span> Ferramentas Premium liberadas</li>
           </ul>
         )}
 
