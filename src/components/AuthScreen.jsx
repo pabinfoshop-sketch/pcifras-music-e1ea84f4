@@ -69,7 +69,7 @@ export default function AuthScreen({ onAuth, onGoogle }) {
               required minLength={6} />
           </div>
           <button type="submit" className="auth-submit" disabled={loading}>
-            {loading ? '⏳ Aguarde…' : (mode === 'login' ? 'Entrar' : 'Criar conta grátis')}
+            {loading ? '⏳ Aguarde…' : (mode === 'login' ? 'Entrar' : 'Criar conta gratuita')}
           </button>
         </form>
 
@@ -83,8 +83,8 @@ export default function AuthScreen({ onAuth, onGoogle }) {
 
         <p className="auth-screen-footnote">
           {mode === 'register'
-            ? '🎉 7 dias grátis — sem cartão de crédito.'
-            : '🔒 Suas músicas ficam sincronizadas na sua conta.'}
+            ? '🎉 7 dias de Premium grátis — sem cartão de crédito.'
+            : '🔒 Suas músicas ficam salvas e sincronizadas na sua conta.'}
         </p>
       </div>
     </div>
