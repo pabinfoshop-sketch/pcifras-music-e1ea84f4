@@ -27,9 +27,12 @@ function profileToUser(profile, sessionUser) {
   const name = profile?.name || sessionUser?.user_metadata?.name || (email ? email.split('@')[0] : 'Você')
   const trialEnd = profile?.trial_ends_at || null
   const premiumUntil = profile?.premium_until || null
+  const subExpiresAt = profile?.subscription_expires_at || null
   const now = Date.now()
   const trialActive = trialEnd ? new Date(trialEnd).getTime() > now : false
-  const paidActive = !!profile?.premium && (!premiumUntil || new Date(premiumUntil).getTime() > now)
+  const legacyPaid = !!profile?.premium && (!premiumUntil || new Date(premiumUntil).getTime() > now)
+  const subPaid = profile?.subscription_status === 'premium' && (!subExpiresAt || new Date(subExpiresAt).getTime() > now)
+  const paidActive = legacyPaid || subPaid
   const trialDays = trialActive ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - now) / 86400000)) : 0
   return {
     id: profile?.id || sessionUser?.id,
@@ -1105,7 +1108,7 @@ export default function App() {
               <div className="topbar-brand">
                 <span className="topbar-brand-mark">♪</span>
                 <div className="topbar-brand-text">
-                  <span className="topbar-brand-title">PCifras<span className="topbar-brand-accent">Music</span>{isPremium && <span className="pro-badge">PRO</span>}</span>
+                  <span className="topbar-brand-title">PCifras<span className="topbar-brand-accent">Music</span>{isPremium && <span className="pro-badge" title="Assinante Premium">👑 PRO</span>}</span>
                   <span className="topbar-brand-sub">Seu repertório, sempre à mão</span>
                 </div>
               </div>
