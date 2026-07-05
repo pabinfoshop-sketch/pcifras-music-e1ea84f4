@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TunerRouteImport } from './routes/tuner'
+import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as ApiFetchRouteImport } from './routes/api/fetch'
@@ -18,6 +19,11 @@ import { Route as ApiAudioSearchRouteImport } from './routes/api/audio.search'
 const TunerRoute = TunerRouteImport.update({
   id: '/tuner',
   path: '/tuner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,6 +49,7 @@ const ApiAudioSearchRoute = ApiAudioSearchRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/planos': typeof PlanosRoute
   '/tuner': typeof TunerRoute
   '/api/fetch': typeof ApiFetchRoute
   '/api/search': typeof ApiSearchRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/planos': typeof PlanosRoute
   '/tuner': typeof TunerRoute
   '/api/fetch': typeof ApiFetchRoute
   '/api/search': typeof ApiSearchRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/planos': typeof PlanosRoute
   '/tuner': typeof TunerRoute
   '/api/fetch': typeof ApiFetchRoute
   '/api/search': typeof ApiSearchRoute
@@ -65,12 +74,25 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/tuner' | '/api/fetch' | '/api/search' | '/api/audio/search'
+  fullPaths:
+    | '/'
+    | '/planos'
+    | '/tuner'
+    | '/api/fetch'
+    | '/api/search'
+    | '/api/audio/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tuner' | '/api/fetch' | '/api/search' | '/api/audio/search'
+  to:
+    | '/'
+    | '/planos'
+    | '/tuner'
+    | '/api/fetch'
+    | '/api/search'
+    | '/api/audio/search'
   id:
     | '__root__'
     | '/'
+    | '/planos'
     | '/tuner'
     | '/api/fetch'
     | '/api/search'
@@ -79,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PlanosRoute: typeof PlanosRoute
   TunerRoute: typeof TunerRoute
   ApiFetchRoute: typeof ApiFetchRoute
   ApiSearchRoute: typeof ApiSearchRoute
@@ -92,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/tuner'
       fullPath: '/tuner'
       preLoaderRoute: typeof TunerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -127,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PlanosRoute: PlanosRoute,
   TunerRoute: TunerRoute,
   ApiFetchRoute: ApiFetchRoute,
   ApiSearchRoute: ApiSearchRoute,
