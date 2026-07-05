@@ -64,9 +64,9 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
 
             <div className="account-actions">
               {paid ? (
-                <button className="account-btn account-btn-primary" onClick={onManage}>
+                <a className="account-btn account-btn-primary" href="/minha-assinatura" style={{textAlign:'center',textDecoration:'none',display:'block'}}>
                   ⚙️ Gerenciar assinatura
-                </button>
+                </a>
               ) : (
                 <button className="account-btn account-btn-primary" onClick={onSubscribe}>
                   ⭐ Assinar Premium
@@ -108,6 +108,16 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
               <h3 className="account-section-title">Conta e suporte</h3>
             </div>
             <ul className="account-list">
+              <li>
+                <a className="account-list-item" href="/minha-assinatura" style={{textDecoration:'none'}}>
+                  <span className="ali-ico">👑</span>
+                  <span className="ali-text">
+                    <strong>Minha assinatura</strong>
+                    <span>Status, renovação e gerenciamento</span>
+                  </span>
+                  <span className="ali-chev">›</span>
+                </a>
+              </li>
               <li>
                 <button className="account-list-item" onClick={handleRestore}>
                   <span className="ali-ico">🔄</span>

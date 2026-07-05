@@ -100,6 +100,24 @@ function PlanosPage() {
           <Link to="/" className="text-sm text-white/60 hover:text-white transition">← Voltar</Link>
         </div>
 
+        {plan === "premium" && (
+          <div className="mb-8 rounded-2xl border border-[#f5c451]/40 bg-gradient-to-br from-[#f5c451]/10 to-transparent p-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">👑</span>
+              <div>
+                <div className="font-bold text-sm">Você já é um assinante Premium!</div>
+                <div className="text-xs text-white/60">Gerencie sua assinatura na sua conta.</div>
+              </div>
+            </div>
+            <Link
+              to="/minha-assinatura"
+              className="text-sm font-bold text-[#f5c451] hover:text-white transition whitespace-nowrap"
+            >
+              Ir para minha conta →
+            </Link>
+          </div>
+        )}
+
         <header className="text-center mb-10 sm:mb-14">
           <span className="inline-block text-xs uppercase tracking-widest text-[#f5c451] mb-3">Assinatura</span>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-3">Escolha seu Plano</h1>
