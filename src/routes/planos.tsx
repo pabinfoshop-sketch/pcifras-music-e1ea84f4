@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/planos")({
   head: () => ({
@@ -30,6 +32,38 @@ const premiumFeatures = [
 ];
 
 function PlanosPage() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubscribe() {
+    setError(null);
+    setLoading(true);
+    try {
+      const { data: userData, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !userData.user) {
+        window.location.href = "/auth?next=/planos";
+        return;
+      }
+      const { data, error: fnErr } = await supabase.functions.invoke(
+        "create-mp-checkout",
+        {
+          body: {
+            user_id: userData.user.id,
+            origin: window.location.origin,
+          },
+        },
+      );
+      if (fnErr) throw fnErr;
+      const url = (data as any)?.init_point || (data as any)?.sandbox_init_point;
+      if (!url) throw new Error("URL de checkout não retornada");
+      window.location.href = url;
+    } catch (e: any) {
+      console.error(e);
+      setError(e?.message || "Erro ao iniciar checkout");
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0b0d12] text-white px-5 py-10 sm:py-16">
       <div className="max-w-5xl mx-auto">
@@ -92,12 +126,17 @@ function PlanosPage() {
                   </li>
                 ))}
               </ul>
-              <Link
-                to="/"
-                className="w-full text-center py-3 rounded-xl bg-gradient-to-r from-[#f5c451] to-[#d4a017] text-[#1a1200] text-sm font-bold hover:brightness-110 transition shadow-[0_10px_30px_-8px_rgba(245,196,81,0.5)]"
+              <button
+                type="button"
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="w-full text-center py-3 rounded-xl bg-gradient-to-r from-[#f5c451] to-[#d4a017] text-[#1a1200] text-sm font-bold hover:brightness-110 transition shadow-[0_10px_30px_-8px_rgba(245,196,81,0.5)] disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Assinar Premium
-              </Link>
+                {loading ? "Redirecionando…" : "Assinar Premium"}
+              </button>
+              {error && (
+                <p className="text-center text-xs text-red-400 mt-2">{error}</p>
+              )}
               <p className="text-center text-xs text-white/40 mt-3">Cancele quando quiser.</p>
             </div>
           </div>
