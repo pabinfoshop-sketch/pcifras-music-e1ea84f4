@@ -344,6 +344,7 @@ export default function App() {
   }, [])
 
   const handleAdd = useCallback(async song => {
+    console.log('Salvando música, isPremium:', isPremium)
     if (!isPremium && songs.length >= FREE_SONG_LIMIT) {
       setShowModal(false)
       setShowUpgrade('songs')
@@ -354,9 +355,11 @@ export default function App() {
     if (isPremium && authUser?.id) {
       setSavingSong(true)
       try {
-        const newId = await upsertCloudSong(authUser.id, song)
+        const newId = await addCloudSong(authUser.id, song)
         if (newId && newId !== song.id) toStore = { ...song, id: newId }
+        console.log('Música salva na nuvem:', toStore)
       } catch (e) {
+        console.error('[cloud save] falhou:', e)
         showToast('Não foi possível salvar na nuvem. Salvamos localmente por enquanto.')
       } finally {
         setSavingSong(false)
@@ -378,7 +381,7 @@ export default function App() {
     setSongs(prev => {
       const next = prev.map(s => s.id === id ? { ...s, favorite: !s.favorite } : s)
       const updated = next.find(s => s.id === id)
-      if (isPremium && authUser?.id && updated) upsertCloudSong(authUser.id, updated).catch(() => {})
+      if (isPremium && authUser?.id && updated) addCloudSong(authUser.id, updated).catch(() => {})
       return next
     })
   }, [authUser, isPremium, setSongs])
