@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TunerRouteImport } from './routes/tuner'
 import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as MinhaAssinaturaRouteImport } from './routes/minha-assinatura'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as ApiFetchRouteImport } from './routes/api/fetch'
@@ -24,6 +25,11 @@ const TunerRoute = TunerRouteImport.update({
 const PlanosRoute = PlanosRouteImport.update({
   id: '/planos',
   path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinhaAssinaturaRoute = MinhaAssinaturaRouteImport.update({
+  id: '/minha-assinatura',
+  path: '/minha-assinatura',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +55,7 @@ const ApiAudioSearchRoute = ApiAudioSearchRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/minha-assinatura': typeof MinhaAssinaturaRoute
   '/planos': typeof PlanosRoute
   '/tuner': typeof TunerRoute
   '/api/fetch': typeof ApiFetchRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/minha-assinatura': typeof MinhaAssinaturaRoute
   '/planos': typeof PlanosRoute
   '/tuner': typeof TunerRoute
   '/api/fetch': typeof ApiFetchRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/minha-assinatura': typeof MinhaAssinaturaRoute
   '/planos': typeof PlanosRoute
   '/tuner': typeof TunerRoute
   '/api/fetch': typeof ApiFetchRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/minha-assinatura'
     | '/planos'
     | '/tuner'
     | '/api/fetch'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/minha-assinatura'
     | '/planos'
     | '/tuner'
     | '/api/fetch'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/minha-assinatura'
     | '/planos'
     | '/tuner'
     | '/api/fetch'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MinhaAssinaturaRoute: typeof MinhaAssinaturaRoute
   PlanosRoute: typeof PlanosRoute
   TunerRoute: typeof TunerRoute
   ApiFetchRoute: typeof ApiFetchRoute
@@ -122,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/planos'
       fullPath: '/planos'
       preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minha-assinatura': {
+      id: '/minha-assinatura'
+      path: '/minha-assinatura'
+      fullPath: '/minha-assinatura'
+      preLoaderRoute: typeof MinhaAssinaturaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MinhaAssinaturaRoute: MinhaAssinaturaRoute,
   PlanosRoute: PlanosRoute,
   TunerRoute: TunerRoute,
   ApiFetchRoute: ApiFetchRoute,
