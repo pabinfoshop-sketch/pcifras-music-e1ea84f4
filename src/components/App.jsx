@@ -369,9 +369,13 @@ export default function App() {
     setCurrentSong(toStore)
     setTranspose(0)
     setBpm(toStore.bpm || 80)
-    setScreen('view')
+    if (setlists.length > 0) {
+      setAddToSetlistSong(toStore)
+    } else {
+      setScreen('view')
+    }
     setTimeout(() => showToast('✓ Música salva no seu repertório'), 100)
-  }, [authUser, isPremium, songs.length, setSongs, showToast])
+  }, [authUser, isPremium, songs.length, setlists.length, setSongs, showToast])
 
   const handleDelete = useCallback(song => {
     setConfirmDelete(song)
