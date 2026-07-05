@@ -72,8 +72,12 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
                   ⭐ Assinar Premium
                 </button>
               )}
+              <a className="account-btn" href="/planos" style={{marginTop:8,display:'block',textAlign:'center',textDecoration:'none'}}>
+                Ver planos e preços
+              </a>
             </div>
           </section>
+
 
           {/* Premium benefits — hide if already paid */}
           {!paid && (
