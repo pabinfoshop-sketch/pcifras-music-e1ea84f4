@@ -1129,6 +1129,19 @@ export default function App() {
               <button className={`tbtn premium-tbtn ${isPremium ? 'is-premium' : ''}`} onClick={openSupport} title={isPremium ? 'Assinatura Premium ativa' : 'Conheça o Premium'}>{isPremium ? '⭐' : '☕'}</button>
               <button className="tbtn" onClick={() => setShowModal(true)} title="Adicionar música">+</button>
             </div>
+            {isPremium && authUser && songs.length > 0 && (
+              <div style={{padding:'8px 12px 0'}}>
+                <button
+                  className="tbtn premium-tbtn is-premium"
+                  style={{width:'100%'}}
+                  onClick={handleCloudSync}
+                  disabled={savingSong}
+                  title="Enviar músicas locais para a nuvem"
+                >
+                  ☁️ Sincronizar músicas locais para a nuvem
+                </button>
+              </div>
+            )}
             <div id="content" style={{paddingTop:8}}>
               {welcome ? (
                 <div className="welcome welcome-premium">
