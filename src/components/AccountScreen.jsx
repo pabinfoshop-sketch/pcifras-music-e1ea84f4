@@ -109,6 +109,16 @@ export default function AccountScreen({ user, isPremium, onSubscribe, onManage, 
             </div>
             <ul className="account-list">
               <li>
+                <a className="account-list-item" href="/minha-assinatura" style={{textDecoration:'none'}}>
+                  <span className="ali-ico">👑</span>
+                  <span className="ali-text">
+                    <strong>Minha assinatura</strong>
+                    <span>Status, renovação e gerenciamento</span>
+                  </span>
+                  <span className="ali-chev">›</span>
+                </a>
+              </li>
+              <li>
                 <button className="account-list-item" onClick={handleRestore}>
                   <span className="ali-ico">🔄</span>
                   <span className="ali-text">
