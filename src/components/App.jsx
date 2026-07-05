@@ -387,16 +387,16 @@ export default function App() {
     setSongs(prev => {
       const next = prev.map(s => s.id === id ? { ...s, favorite: !s.favorite } : s)
       const updated = next.find(s => s.id === id)
-      if (authUser?.id && updated) upsertCloudSong(authUser.id, updated).catch(() => {})
+      if (isPremium && authUser?.id && updated) upsertCloudSong(authUser.id, updated).catch(() => {})
       return next
     })
-  }, [authUser, setSongs])
+  }, [authUser, isPremium, setSongs])
 
   const confirmDeleteSong = useCallback(async () => {
     if (!confirmDelete) return
     const target = confirmDelete
     setConfirmDelete(null)
-    if (authUser?.id) {
+    if (isPremium && authUser?.id) {
       try { await deleteCloudSong(authUser.id, target.id) }
       catch { showToast('Não foi possível remover da nuvem. Tente novamente.'); return }
     }
