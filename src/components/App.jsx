@@ -290,9 +290,9 @@ export default function App() {
     return () => { mounted = false; sub.subscription.unsubscribe() }
   }, [refreshProfile, setAuthUser])
 
-  // Carrega repertório do usuário da nuvem ao logar; mescla com músicas locais.
+  // Carrega repertório do usuário da nuvem ao logar (apenas Premium).
   useEffect(() => {
-    if (!authUser?.id) return
+    if (!authUser?.id || !isPremium) return
     let cancelled = false
     setLoadingCloud(true)
     ;(async () => {
@@ -317,7 +317,7 @@ export default function App() {
       }
     })()
     return () => { cancelled = true }
-  }, [authUser?.id, setSongs, showToast])
+  }, [authUser?.id, isPremium, setSongs, showToast])
 
   const handleGoogleLogin = useCallback(async () => {
     try {
