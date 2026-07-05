@@ -126,12 +126,17 @@ function PlanosPage() {
                   </li>
                 ))}
               </ul>
-              <Link
-                to="/"
-                className="w-full text-center py-3 rounded-xl bg-gradient-to-r from-[#f5c451] to-[#d4a017] text-[#1a1200] text-sm font-bold hover:brightness-110 transition shadow-[0_10px_30px_-8px_rgba(245,196,81,0.5)]"
+              <button
+                type="button"
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="w-full text-center py-3 rounded-xl bg-gradient-to-r from-[#f5c451] to-[#d4a017] text-[#1a1200] text-sm font-bold hover:brightness-110 transition shadow-[0_10px_30px_-8px_rgba(245,196,81,0.5)] disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Assinar Premium
-              </Link>
+                {loading ? "Redirecionando…" : "Assinar Premium"}
+              </button>
+              {error && (
+                <p className="text-center text-xs text-red-400 mt-2">{error}</p>
+              )}
               <p className="text-center text-xs text-white/40 mt-3">Cancele quando quiser.</p>
             </div>
           </div>
