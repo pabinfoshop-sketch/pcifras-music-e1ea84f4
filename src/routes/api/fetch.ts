@@ -80,6 +80,8 @@ export const Route = createFileRoute('/api/fetch')({
     handlers: {
       OPTIONS: async () => new Response(null, { status: 204, headers: CORS }),
       POST: async ({ request }) => {
+        const auth = await requireApiAuth(request, CORS)
+        if (auth instanceof Response) return auth
         try {
           const { url, key } = (await request.json()) as { url?: string; key?: string }
           if (!url || !/^https?:\/\/www\.cifraclub\.com\.br\//.test(url)) {
