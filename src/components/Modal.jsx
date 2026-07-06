@@ -1,6 +1,15 @@
 import { useState, useRef } from 'react'
 import { parseCifraText } from '../utils/parser'
 import { detectKey } from '../utils/chordDiagrams'
+import { supabase } from '@/integrations/supabase/client'
+
+async function authHeaders() {
+  const { data } = await supabase.auth.getSession()
+  const token = data.session?.access_token
+  return token
+    ? { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+    : { 'Content-Type': 'application/json' }
+}
 
 export default function Modal({ onAdd, onClose, initialTab = 'search' }) {
   const [tab, setTab] = useState(initialTab)
