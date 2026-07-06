@@ -1,5 +1,6 @@
 // Edge Function: create-mp-checkout
 // Cria uma preferência de checkout do Mercado Pago para o plano Premium.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
