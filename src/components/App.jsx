@@ -216,6 +216,8 @@ export default function App() {
         if (error) { showToast(mapError(error)); return false }
         const u = await refreshProfile(data.user)
         setShowAuth(false)
+        setScreen('songs')
+        setActiveSetlist(null)
         showToast(`Bem-vindo${u?.name ? `, ${u.name}` : ''}!`)
         return true
       } else {
