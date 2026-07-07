@@ -38,7 +38,7 @@ function BuscaPage() {
     queryKey: ["public_songs", "search", query],
     enabled: query.length > 0,
     queryFn: async (): Promise<PublicSong[]> => {
-      const escaped = query.replace(/[%_]/g, (c) => `\\${c}`);
+      const escaped = query.replace(/[%_]/g, (c: string) => `\\${c}`);
       const pattern = `%${escaped}%`;
       const { data, error } = await supabase
         .from("public_songs")
