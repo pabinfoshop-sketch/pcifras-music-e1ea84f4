@@ -1,13 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { useState } from "react";
 import { mockSongs } from "@/lib/mockData";
 import BottomNav from "@/components/BottomNav";
-
-const searchSchema = z.object({
-  q: fallback(z.string(), "").default(""),
-});
 
 export const Route = createFileRoute("/busca")({
   head: () => ({

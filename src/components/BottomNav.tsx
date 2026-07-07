@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { Home, Music, Library, User } from "lucide-react";
 
-const items = [
+type NavItem = { to: "/" | "/musicas" | "/repertorios" | "/perfil"; label: string; Icon: typeof Home; exact?: boolean };
+const items: NavItem[] = [
   { to: "/", label: "Home", Icon: Home, exact: true },
   { to: "/musicas", label: "Músicas", Icon: Music },
   { to: "/repertorios", label: "Repertórios", Icon: Library },
   { to: "/perfil", label: "Perfil", Icon: User },
-] as const;
+];
 
 export default function BottomNav() {
   return (
