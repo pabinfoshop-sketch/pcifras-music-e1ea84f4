@@ -164,7 +164,17 @@ function RepertoriosPage() {
           </button>
         </div>
 
-        {repertoiresQ.isLoading && <p className="text-white/60">Carregando…</p>}
+        {repertoiresQ.isLoading && (
+          <div className="grid gap-4">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="rounded-xl border border-white/10 bg-white/[0.03] p-4 animate-pulse">
+                <div className="h-5 w-1/2 bg-white/10 rounded mb-2" />
+                <div className="h-4 w-1/3 bg-white/10 rounded mb-3" />
+                <div className="h-4 w-16 bg-white/10 rounded" />
+              </div>
+            ))}
+          </div>
+        )}
         {repertoiresQ.error && <p className="text-red-400">Erro: {(repertoiresQ.error as Error).message}</p>}
         {!repertoiresQ.isLoading && repertoires.length === 0 && (
           <p className="text-white/60">Você ainda não tem repertórios. Crie o primeiro!</p>
