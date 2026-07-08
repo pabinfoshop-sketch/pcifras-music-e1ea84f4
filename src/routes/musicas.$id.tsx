@@ -160,6 +160,14 @@ function SongDetailPage() {
 
           <button
             type="button"
+            onClick={exportPDF}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold bg-white/[0.05] border border-white/10 hover:bg-white/10"
+          >
+            <Download size={16} /> PDF
+          </button>
+
+          <button
+            type="button"
             onClick={() => {
               setStage(true);
               document.documentElement.requestFullscreen?.().catch(() => {});
