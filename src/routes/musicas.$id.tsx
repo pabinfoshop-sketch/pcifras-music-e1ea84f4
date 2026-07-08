@@ -132,7 +132,10 @@ function SongDetailPage() {
 
           <button
             type="button"
-            onClick={() => setStage(true)}
+            onClick={() => {
+              setStage(true);
+              document.documentElement.requestFullscreen?.().catch(() => {});
+            }}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold bg-[#f5c451]/20 border border-[#f5c451]/30 text-[#f5c451] hover:bg-[#f5c451]/30"
           >
             <Maximize size={16} /> Modo Palco
