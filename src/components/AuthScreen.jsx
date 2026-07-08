@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import logoAsset from '@/assets/pcifras-logo.jpg.asset.json'
 
 export default function AuthScreen({ onAuth, onGoogle }) {
   const [mode, setMode] = useState('login')
@@ -26,7 +27,8 @@ export default function AuthScreen({ onAuth, onGoogle }) {
     <div className="auth-screen">
       <div className="auth-screen-card">
         <div className="auth-screen-brand">
-          <h1 className="auth-screen-wordmark">🎸 PCifras</h1>
+          <img src={logoAsset.url} alt="PCifras" className="auth-screen-logo-img" />
+          <h1 className="auth-screen-brand-name">PCifras</h1>
           <div className="auth-screen-eyebrow">Cifras &amp; Repertórios</div>
           <p className="auth-screen-sub">
             {mode === 'login'
