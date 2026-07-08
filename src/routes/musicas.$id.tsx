@@ -69,7 +69,10 @@ function SongDetailPage() {
       <div className="fixed inset-0 z-50 bg-[#0b0d12] text-white overflow-auto">
         <button
           type="button"
-          onClick={() => setStage(false)}
+          onClick={() => {
+            setStage(false);
+            if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+          }}
           className="fixed top-4 right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20"
           aria-label="Sair do modo palco"
         >
@@ -132,7 +135,10 @@ function SongDetailPage() {
 
           <button
             type="button"
-            onClick={() => setStage(true)}
+            onClick={() => {
+              setStage(true);
+              document.documentElement.requestFullscreen?.().catch(() => {});
+            }}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold bg-[#f5c451]/20 border border-[#f5c451]/30 text-[#f5c451] hover:bg-[#f5c451]/30"
           >
             <Maximize size={16} /> Modo Palco
