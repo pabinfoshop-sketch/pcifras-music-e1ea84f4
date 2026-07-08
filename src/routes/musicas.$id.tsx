@@ -69,7 +69,10 @@ function SongDetailPage() {
       <div className="fixed inset-0 z-50 bg-[#0b0d12] text-white overflow-auto">
         <button
           type="button"
-          onClick={() => setStage(false)}
+          onClick={() => {
+            setStage(false);
+            if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+          }}
           className="fixed top-4 right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20"
           aria-label="Sair do modo palco"
         >
