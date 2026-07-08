@@ -26,9 +26,8 @@ export default function AuthScreen({ onAuth, onGoogle }) {
     <div className="auth-screen">
       <div className="auth-screen-card">
         <div className="auth-screen-brand">
-          <div className="auth-screen-logo">🎸</div>
-          <div className="auth-screen-eyebrow">O app do músico moderno</div>
-          <h1 className="auth-screen-title">PCifras Music</h1>
+          <h1 className="auth-screen-wordmark">🎸 PCifras</h1>
+          <div className="auth-screen-eyebrow">Cifras &amp; Repertórios</div>
           <p className="auth-screen-sub">
             {mode === 'login'
               ? 'Acesse suas cifras e repertórios de qualquer lugar'
