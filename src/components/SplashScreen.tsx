@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import logoAsset from "@/assets/pcifras-logo.jpg.asset.json";
 
-const LOGO_URL = "/icons/icon-192.png";
+const LOGO_URL = logoAsset.url;
 
 
 export default function SplashScreen({ onDone }: { onDone: () => void }) {
@@ -67,8 +68,8 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
         />
 
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 30, fontWeight: 800, color: "#fff" }}>
-            PCifras<span style={{ color: "#22d3ee" }}>Music</span>
+          <div style={{ fontSize: 28, fontWeight: 800, color: "#f5c451", letterSpacing: -0.5 }}>
+            PCifras
           </div>
           <div
             style={{
