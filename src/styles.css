@@ -4849,6 +4849,9 @@ button { cursor: pointer; border: none; background: none; color: inherit; }
   margin: 0 auto;
   padding: 40px 20px 44px;
   text-align: center;
+  height: auto;
+  min-height: 0;
+  justify-content: flex-start;
 }
 .welcome-premium .welcome-icon{
   width: 76px; height: 76px;
