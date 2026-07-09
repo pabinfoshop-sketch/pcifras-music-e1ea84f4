@@ -37,6 +37,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: pcifras-music
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          directory: .output/public
           wranglerVersion: '3'
