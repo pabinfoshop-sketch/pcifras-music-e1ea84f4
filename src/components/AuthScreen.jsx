@@ -101,6 +101,35 @@ export default function AuthScreen({ onAuth, onGoogle }) {
           <span>·</span>
           <span>✕ Cancele quando quiser</span>
         </div>
+
+        <div style={{marginTop:16,textAlign:'center'}}>
+          <button
+            type="button"
+            onClick={() => {
+              try {
+                localStorage.setItem('cifras_user', JSON.stringify({
+                  id: 'dev-user-id',
+                  email: 'dev@teste.com',
+                  name: 'DEV - Modo Teste',
+                  premium: true,
+                  paidActive: true,
+                  trialDays: 7,
+                  trialEnd: new Date(Date.now() + 7*86400000).toISOString(),
+                }))
+                window.location.reload()
+              } catch (e) {
+                alert('Erro ao ativar modo teste: ' + e.message)
+              }
+            }}
+            style={{
+              background:'none', border:'1px dashed rgba(255,255,255,0.2)',
+              color:'rgba(255,255,255,0.4)', fontSize:'0.72rem',
+              padding:'6px 14px', borderRadius:8, cursor:'pointer',
+            }}
+          >
+            🔧 Modo de Teste (sem login)
+          </button>
+        </div>
       </div>
     </div>
   )
