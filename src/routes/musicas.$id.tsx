@@ -38,7 +38,7 @@ function transposeCifra(cifra: string, semitones: number) {
 }
 
 function SongDetailPage() {
-  const { song } = Route.useLoaderData();
+  const { song } = Route.useLoaderData() as { song: typeof mockSongs[number] };
   const [semitones, setSemitones] = useState(0);
   const [stage, setStage] = useState(false);
   const [favs, setFavs] = useState<string[]>(() => (typeof window !== "undefined" ? readFavs() : []));
