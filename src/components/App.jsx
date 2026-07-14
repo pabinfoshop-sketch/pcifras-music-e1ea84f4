@@ -282,20 +282,30 @@ export default function App() {
   // Session bootstrap + reactive updates from Supabase auth.
   useEffect(() => {
     let mounted = true
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!mounted) return
-      if (data.session?.user) await refreshProfile(data.session.user)
-      else setAuthUser(null)
-      if (mounted) setAuthLoading(false)
-    })
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') { setAuthUser(null); return }
-      if (session?.user) {
-        refreshProfile(session.user)
-        if (event === 'SIGNED_IN') { setScreen('songs'); setShowAuth(false); setActiveSetlist(null) }
+    let unsubscribe = () => {}
+    ;(async () => {
+      try {
+        const { data } = await supabase.auth.getSession()
+        if (!mounted) return
+        if (data.session?.user) await refreshProfile(data.session.user)
+        else setAuthUser(null)
+        if (mounted) setAuthLoading(false)
+
+        const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === 'SIGNED_OUT') { setAuthUser(null); return }
+          if (session?.user) {
+            refreshProfile(session.user)
+            if (event === 'SIGNED_IN') { setScreen('songs'); setShowAuth(false); setActiveSetlist(null) }
+          }
+        })
+        unsubscribe = () => sub.subscription.unsubscribe()
+      } catch (err) {
+        console.warn('[Auth] Supabase indisponível — modo offline:', err)
+        if (!mounted) return
+        setAuthLoading(false)
       }
-    })
-    return () => { mounted = false; sub.subscription.unsubscribe() }
+    })()
+    return () => { mounted = false; unsubscribe() }
   }, [refreshProfile, setAuthUser])
 
   // Carrega repertório do usuário da nuvem ao logar (apenas Premium).
